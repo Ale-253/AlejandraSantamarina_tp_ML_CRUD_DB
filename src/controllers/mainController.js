@@ -1,6 +1,7 @@
 /* BASE DE DATOS */
 
 const db = require('../database/models')
+const { Op } = require('sequelize');
 
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +13,7 @@ const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); //Ag
 
 const controller = {
 	index: (req, res) => {
-		
+
 		const visited = db.Product.findAll({
 			where: {
 				categoryId: 1
@@ -34,14 +35,23 @@ const controller = {
 	},
 	search: (req, res) => {
 		// Do the magic
-		const keywords = req.query.keywords
-		const results = products.filter(product => product.name.toLowerCase().includes(keywords.toLowerCase()))
-		return res.render('results', {
-			results,
-			toThousand,
-			keywords
+		const keywords = req.query.keywords.toLowerCase();
+		db.Product.findAll({
+			where: {
+				name: {
+					[Op.like]: '%' + keywords + '%'
+				}
+			}
 		})
-	},
+			.then(results => {
+				return res.render('results', {
+					results,
+					toThousand,
+					keywords
+				});
+			})
+			.catch(error => console.log(error));
+	}
 };
 
 module.exports = controller;
