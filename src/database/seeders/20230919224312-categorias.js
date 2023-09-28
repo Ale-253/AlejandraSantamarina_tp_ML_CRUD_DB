@@ -6,13 +6,13 @@ module.exports = {
 
     await queryInterface.bulkInsert('Categories', [
       {
-        name: 'visited',
+        name: 'Última visita',
         image: null,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        name: 'in-sale',
+        name: 'En oferta',
         image: null,
         createdAt: new Date(),
         updatedAt: new Date()
